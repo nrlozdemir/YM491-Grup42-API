@@ -1,0 +1,23 @@
+{
+  "name": "ym491-backend",
+  "version": "0.0.1",
+  "description": "YM491 Backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "Nurullah Ozdemir github@nrlozdemir",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "moment": "^2.29.1",
+    "mysql2": "^2.1.0",
+    "sequelize": "^6.3.4",
+    "validator": "^13.1.1"
+  }
+}
