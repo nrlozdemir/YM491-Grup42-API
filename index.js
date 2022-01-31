@@ -1,7 +1,7 @@
 const env = require("dotenv");
+var cors = require("cors");
 const express = require("express");
 const app = express();
-var cors = require("cors");
 
 const webRoutes = require("./routes/web");
 const sequelize = require("./config/database");
@@ -18,8 +18,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     allowedHeaders: ["Content-Type"],
-    origin: "*",
+    origin: "http://37.148.211.241",
     preflightContinue: true,
+    optionsSuccessStatus: 200,
   })
 );
 
