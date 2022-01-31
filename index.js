@@ -15,6 +15,14 @@ app.use(express.urlencoded({ extended: true }));
 //   next();
 // });
 
+app.use(
+  cors({
+    allowedHeaders: ["Content-Type"],
+    origin: "*",
+    preflightContinue: true,
+  })
+);
+
 app.use(webRoutes);
 
 sequelize
