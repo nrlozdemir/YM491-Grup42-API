@@ -22,6 +22,7 @@ Aşağıdaki komutlar ile mysql sunucuya import edilir.
 | moment | Javascript ile tarih işlemlerini yapabileceğimiz bir kütüphanedir. |
 | sequelize | Sequelize bir ORM'dir, veritabanı dilinden bağımsız olarak desteklediği tüm dillerde, sunmuş olduğu metodlar ile veritabanı üstünde işlem yapılmasını sağlar. |
 | mysql | Sürücü paketidir, mysql sunucusuna bağlanabilmek için kullanılmaktadır. |
+| validator | [validator](https://www.npmjs.com/package/validator "validator") modülü çeşitli veri yapıları üzerinde birçok işlem yapılabilmesini sağlayan bir kütüphanedir. Örneğin `string.isEmpty ya da string.isEmail` |
 
 ## Değişkenler
 
