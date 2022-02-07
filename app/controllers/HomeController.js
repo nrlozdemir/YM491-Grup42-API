@@ -6,6 +6,7 @@ exports.news = (req, res, next) => {
     News.findAll({
       offset: offset * 10,
       limit: 10,
+      order: [["id", "DESC"]],
     })
       .then((newsItems) => {
         console.log(c);

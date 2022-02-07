@@ -23,7 +23,7 @@ const News = sequelize.define(
       allowNull: false,
     },
     label: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
   },
