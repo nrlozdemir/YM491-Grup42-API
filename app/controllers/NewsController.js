@@ -52,41 +52,45 @@ exports.autoComplete = async (req, res, next) => {
   const client = new Client({ node: "http://localhost:9200" });
   const searchQuery = req.body.query;
 
-  await pingElasticSearch(client)
-    .then(async (a) => {
-      const { body } = await client.search({
-        index: "news",
-        body: {
-          size: 1000,
-          query: {
-            multi_match: {
-              query: searchQuery,
-              fields: ["title", "author", "text"],
+  if (searchQuery.length > 1) {
+    await pingElasticSearch(client)
+      .then(async (a) => {
+        const { body } = await client.search({
+          index: "news",
+          body: {
+            size: 1000,
+            query: {
+              multi_match: {
+                query: searchQuery,
+                fields: ["title", "author", "text"],
+              },
             },
           },
-        },
-      });
-
-      let indexerResult = [];
-
-      !!body &&
-        !!body.hits &&
-        !!body.hits.hits &&
-        body.hits.hits.length > 0 &&
-        body.hits.hits.map((d, i) => {
-          indexerResult.push(d._source);
         });
 
-      if (!!indexerResult && indexerResult.length > 0) {
-        console.log(indexerResult.length);
-        res.send({ data: indexerResult, message: "OK" });
-      } else {
-        findQuery(res, searchQuery);
-      }
-    })
-    .catch((err) => {
-      return findQuery(res, searchQuery);
-    });
+        let indexerResult = [];
+
+        !!body &&
+          !!body.hits &&
+          !!body.hits.hits &&
+          body.hits.hits.length > 0 &&
+          body.hits.hits.map((d, i) => {
+            indexerResult.push(d._source);
+          });
+
+        if (!!indexerResult && indexerResult.length > 0) {
+          console.log(indexerResult.length);
+          res.send({ data: indexerResult, message: "OK" });
+        } else {
+          findQuery(res, searchQuery);
+        }
+      })
+      .catch((err) => {
+        return findQuery(res, searchQuery);
+      });
+  } else {
+    res.send({ data: [], message: "OK" });
+  }
 };
 
 exports.create = async (req, res, next) => {
