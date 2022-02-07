@@ -1,7 +1,7 @@
 const News = require("../models/News");
 const Sequelize = require("sequelize");
-
 const { Client } = require("@elastic/elasticsearch");
+const axios = require("axios");
 
 exports.detail = (req, res, next) => {
   const id = parseInt(req.params.id);
@@ -55,6 +55,7 @@ exports.autoComplete = async (req, res, next) => {
   if (searchQuery.length > 1) {
     await pingElasticSearch(client)
       .then(async (a) => {
+        console.log("pong:", a);
         const { body } = await client.search({
           index: "news",
           body: {
@@ -96,21 +97,35 @@ exports.autoComplete = async (req, res, next) => {
 exports.create = async (req, res, next) => {
   const { title, text, author } = req.body;
 
-  const label = 0;
+  const getScore = await axios
+    .post(`${process.env.BACKEND}/predict_LR`, {
+      title: title,
+      text: text,
+    })
+    .then((e) => {
+      console.log(e);
+    })
+    .catch((e) => {
+      console.log("error", e);
+    });
 
-  News.create({
-    title: title,
-    author: author,
-    text: text,
-    label: label,
-  }).then(function (e) {
-    if (e) {
-      res.send({
-        data: e,
-        message: "OK",
-      });
-    } else {
-      res.send({ message: "ERROR", data: [] });
-    }
-  });
+  console.log(getScore);
+
+  // const label = 0;
+
+  // News.create({
+  //   title: title,
+  //   author: author,
+  //   text: text,
+  //   label: label,
+  // }).then(function (e) {
+  //   if (e) {
+  //     res.send({
+  //       data: e,
+  //       message: "OK",
+  //     });
+  //   } else {
+  //     res.send({ message: "ERROR", data: [] });
+  //   }
+  // });
 };
