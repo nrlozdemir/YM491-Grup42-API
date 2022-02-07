@@ -94,38 +94,76 @@ exports.autoComplete = async (req, res, next) => {
   }
 };
 
-exports.create = async (req, res, next) => {
-  const { title, text, author } = req.body;
+const parser = (strTuple) => {
+  const splitStr = strTuple.split(",");
+  const first = splitStr[0]
+    .replace("(", "")
+    .replace(")", "")
+    .replace("'", "")
+    .replace("'", "")
+    .replace(" ", "")
+    .replace(" ", "");
+  const second = splitStr[1]
+    .replace("(", "")
+    .replace(")", "")
+    .replace("'", "")
+    .replace("'", "")
+    .replace(" ", "")
+    .replace(" ", "");
 
-  const getScore = await axios
+  return [parseFloat(first), parseFloat(second)];
+};
+
+exports.create = async (req, res, next) => {
+  const { newsTitle, newsText } = req.body;
+
+  const getLRScore = await axios
     .post(`${process.env.BACKEND}/predict_LR`, {
-      title: title,
-      text: text,
+      title: newsTitle,
+      text: newsText,
     })
     .then((e) => {
-      console.log(e);
+      return e.data;
     })
     .catch((e) => {
       console.log("error", e);
+      return false;
     });
 
-  console.log(getScore);
+  const getPAScore = await axios
+    .post(`${process.env.BACKEND}/predict_PA`, {
+      title: newsTitle,
+      text: newsText,
+    })
+    .then((e) => {
+      return e.data;
+    })
+    .catch((e) => {
+      console.log("error", e);
+      return false;
+    });
 
-  // const label = 0;
+  const lrScore = parser(getLRScore);
+  const paScore = parser(getPAScore);
 
-  // News.create({
-  //   title: title,
-  //   author: author,
-  //   text: text,
-  //   label: label,
-  // }).then(function (e) {
-  //   if (e) {
-  //     res.send({
-  //       data: e,
-  //       message: "OK",
-  //     });
-  //   } else {
-  //     res.send({ message: "ERROR", data: [] });
-  //   }
-  // });
+  const predictLRLabel = lrScore[0];
+  const predictLRScore = lrScore[1];
+  const predictPALabel = paScore[0];
+  const predictPAScore = paScore[1];
+
+  if (!!getLRScore && !!getPAScore) {
+    res.send({
+      data: {
+        title: newsTitle,
+        text: newsText,
+        lrLabel: predictLRLabel,
+        lrScore: predictLRScore,
+        paLabel: predictPALabel,
+        paScore: predictPAScore,
+      },
+      message: "OK",
+    });
+  } else {
+    res.send({ message: "ERROR", data: [] });
+  }
 };
