@@ -17,5 +17,6 @@ router.post("/news-autocomplete", NewsController.autoComplete);
 router.get("/my-news/:id", MyNewsController.list);
 router.post("/my-news", MyNewsController.insert);
 router.get("/author-detail/:id", AuthorController.detail);
+router.post("/news/create", NewsController.create);
 
 module.exports = router;

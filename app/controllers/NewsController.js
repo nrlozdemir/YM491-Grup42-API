@@ -88,3 +88,25 @@ exports.autoComplete = async (req, res, next) => {
       return findQuery(res, searchQuery);
     });
 };
+
+exports.create = async (req, res, next) => {
+  const { title, text, author } = req.body;
+
+  const label = 0;
+
+  News.create({
+    title: title,
+    author: author,
+    text: text,
+    label: label,
+  }).then(function (e) {
+    if (e) {
+      res.send({
+        data: e,
+        message: "OK",
+      });
+    } else {
+      res.send({ message: "ERROR", data: [] });
+    }
+  });
+};
