@@ -76,7 +76,10 @@ exports.autoComplete = async (req, res, next) => {
           !!body.hits.hits &&
           body.hits.hits.length > 0 &&
           body.hits.hits.map((d, i) => {
-            indexerResult.push(d._source);
+            indexerResult.push({
+              id: d._source.id,
+              title: d._source.title,
+            });
           });
 
         if (!!indexerResult && indexerResult.length > 0) {
